@@ -8,14 +8,8 @@ class CalendarsController < ApplicationController
 
   # 予定の保存
   def create
-    calendars_params = params.fetch(:calendars, {})
-    if calendars_params[:date].present? && calendars_params[:plan].present?
-      Plan.create(plan_params)
-      redirect_to action: :index
-    else
-      flash[:error] = "Missing or empty 'calendars' parameter"
-      redirect_to action: :index
-    end
+    Plan.create(plan_params)
+    redirect_to action: :index
   end
 
   private
@@ -40,13 +34,7 @@ class CalendarsController < ApplicationController
       plans.each do |plan|
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-
-      wday_num = (@todays_date + x).wday
-      if wday_num >= 7
-        wday_num = wday_num -7
-      end
-
-      days = { :month => (@todays_date + x).month, :date => (@todays_date + x).day, :plans => today_plans, :wday =>  "#{(@todays_date + x).month}/#{(@todays_date + x).day}#{wdays[wday_num]}" }
+      days = { :month => (@todays_date + x).month, :date => (@todays_date+x).day, :plans => today_plans}
       @week_days.push(days)
     end
 
