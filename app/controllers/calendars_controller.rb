@@ -8,8 +8,14 @@ class CalendarsController < ApplicationController
 
   # 予定の保存
   def create
-    Plan.create(plan_params)
-    redirect_to action: :index
+    calendars_params = params.fetch(:calendars, {})
+    if calendars_params[:date].present? && calendars_params[:plan].present?
+      Plan.create(plan_params)
+      redirect_to action: :index
+    else
+      flash[:error] = "Missing or empty 'calendars' parameter"
+      redirect_to action: :index
+    end
   end
 
   private
